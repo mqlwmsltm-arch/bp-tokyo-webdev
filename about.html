@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홍대 유흥 상세 정보 | 데이터 기반 분석</title>
+    <meta name="description" content="홍대 유흥 상세 정보를 데이터 기반으로 제공합니다. 홍대 지역 클럽, 바, 펍, 라운지의 업종별 방문객 통계, 연령대 분포, 시간대별 혼잡도 등 실제 분석 결과를 바탕으로 한 신뢰할 수 있는 정보를 확인하세요.">
+    <meta name="keywords" content="홍대 유흥 정보, 홍대 유흥 상세정보, 홍대 클럽 통계, 홍대 바 분석, 홍대 펍 데이터, 홍대 유흥 데이터, 홍대 지역 정보">
+    <link rel="canonical" href="https://tokyo-webdev.pages.dev/info">
+    <meta property="og:title" content="홍대 유흥 상세 정보 - tokyo-webdev">
+    <meta property="og:description" content="데이터 기반 홍대 유흥 분석. 업종별 방문객 통계와 지역 특성을 상세히 제공합니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tokyo-webdev.pages.dev/info">
+    <meta property="og:image" content="https://tokyo-webdev.pages.dev/assets/og-info.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="홍대 유흥 상세 정보">
+    <meta name="twitter:description" content="데이터 기반 홍대 유흥 분석 리포트">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="tokyo-webdev">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <style>
+        /* Street Brutalist - 재사용 디자인 시스템 */
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #222222;
+            --bg-hover: #2a2a2a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #707070;
+            --accent: #c62828;
+            --accent-hover: #e53935;
+            --accent-dim: #8e0000;
+            --border: #333333;
+            --border-light: #444444;
+            --shadow: 0 4px 12px rgba(0,0,0,0.5);
+            --shadow-hover: 0 6px 20px rgba(0,0,0,0.7);
+            --font-main: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --radius: 4px;
+            --transition: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 400;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.6rem; margin-top: 2.5rem; margin-bottom: 1rem; }
+        h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+
+        a {
+            color: var(--text-primary);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: color var(--transition);
+        }
+
+        a:hover { color: var(--accent-hover); }
+
+        p { margin-bottom: 1rem; }
+
+        /* 헤더 & 네비게이션 - 햄버거 메뉴 패턴 유지 */
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .logo a:hover { color: var(--accent-hover); }
+
+        .hamburger {
+            display: block;
+            width: 32px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-primary);
+            position: absolute;
+            left: 0;
+            transition: all var(--transition);
+        }
+
+        .hamburger span:nth-child(1) { top: 4px; }
+        .hamburger span:nth-child(2) { top: 11px; }
+        .hamburger span:nth-child(3) { top: 18px; }
+
+        .hamburger.active span:nth-child(1) { top: 11px; transform: rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { top: 11px; transform: rotate(-45deg); }
+
+        #nav-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+
+        #nav-menu.open { display: block; }
+
+        #nav-menu ul {
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        #nav-menu ul li { margin: 0.5rem 0; }
+
+        #nav-menu ul li a {
+            display: block;
+            padding: 0.5rem 0;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: all var(--transition);
+        }
+
+        #nav-menu ul li a:hover,
+        #nav-menu ul li a.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent);
+        }
+
+        /* 메인 콘텐츠 */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 4rem;
+        }
+
+        .page-title {
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 2.5rem;
+            max-width: 720px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: all var(--transition);
+        }
+
+        .info-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-hover);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .info-card .stat {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card .label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-card p {
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .data-table-wrap {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent);
+            white-space: nowrap;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .highlight-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .highlight-box p:last-child { margin-bottom: 0; }
+
+        /* FAQ 섹션 */
+        .faq-section {
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+            user-select: none;
+        }
+
+        .faq-question .icon {
+            font-size: 1.4rem;
+            transition: transform var(--transition);
+            color: var(--accent);
+        }
+
+        .faq-item.open .faq-question .icon { transform: rotate(45deg); }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: var(--text-secondary);
+            padding-left: 0;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding-top: 0.75rem;
+        }
+
+        /* 푸터 */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a { color: var(--text-secondary); }
+        footer a:hover { color: var(--accent-hover); }
+
+        /* 타이포그래피 강조 */
+        .accent-text { color: var(--accent); }
+        .mono { font-family: var(--font-mono); }
+
+        /* 반응형 */
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+
+            #nav-menu {
+                display: block !important;
+                position: static;
+                width: auto;
+                background: transparent;
+                border-bottom: none;
+                padding: 0;
+            }
+
+            #nav-menu ul {
+                display: flex;
+                gap: 2rem;
+                padding: 0;
+            }
+
+            #nav-menu ul li {
+                margin: 0;
+            }
+
+            #nav-menu ul li a {
+                border-bottom: none;
+                padding: 0.5rem 0;
+            }
+
+            h1 { font-size: 2.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            main { padding: 2rem 1rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-wrapper">
+            <div class="logo"><a href="/">tokyo-webdev</a></div>
+            <button class="hamburger" id="hamburger-btn" aria-label="메뉴 열기">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="nav-menu">
+                <ul>
+                    <li><a href="/">홈</a></li>
+                    <li><a href="/info" class="active">정보</a></li>
+                    <li><a href="/clubs">클럽</a></li>
+                    <li><a href="/bars">바</a></li>
+                    <li><a href="/guide">가이드</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-title">홍대 유흥 상세 정보</h1>
+        <p class="page-subtitle">데이터 기반으로 분석한 홍대 유흥의 현황과 특성. 2025년 상반기 기준 방문객 통계, 업종별 분포, 시간대별 패턴을 제공합니다.</p>
+
+        <!-- 통계 요약 카드 -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="stat">312</div>
+                <div class="label">등록 유흥 업소</div>
+                <p>홍대 주요 상권 내 클럽·바·펍·라운지 등록 업소 수 (2025.06 기준)</p>
+            </div>
+            <div class="info-card">
+                <div class="stat">58%</div>
+                <div class="label">주말 방문객 집중도
+</body>
+</html>
