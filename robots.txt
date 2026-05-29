@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mqlwmsltm-arch.github.io/bp-tokyo-webdev//sitemap.xml
