@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tokyo-webdev.node-link.shop/sitemap.xml
+Sitemap: https://hongdae-night-zone.node-link.shop/sitemap.xml
